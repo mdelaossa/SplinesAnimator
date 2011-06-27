@@ -40,6 +40,8 @@ public class Main extends javax.swing.JFrame {
         pointQuantityField = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         playPauseButton = new javax.swing.JButton();
+        addShadowButton = new javax.swing.JButton();
+        removeShadowButton = new javax.swing.JButton();
         splineJPanel = new SplinesJPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -70,6 +72,20 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
+        addShadowButton.setText("Añadir Sombra");
+        addShadowButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addShadowButtonActionPerformed(evt);
+            }
+        });
+
+        removeShadowButton.setText("Remover Sombra");
+        removeShadowButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeShadowButtonActionPerformed(evt);
+            }
+        });
+
         org.jdesktop.layout.GroupLayout jPanel1Layout = new org.jdesktop.layout.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -78,7 +94,11 @@ public class Main extends javax.swing.JFrame {
                 .add(addPointButton)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                 .add(removePointButton)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 404, Short.MAX_VALUE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                .add(addShadowButton)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(removeShadowButton)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 113, Short.MAX_VALUE)
                 .add(playPauseButton)
                 .add(18, 18, 18)
                 .add(jLabel1)
@@ -93,7 +113,9 @@ public class Main extends javax.swing.JFrame {
                     .add(removePointButton)
                     .add(pointQuantityField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(jLabel1)
-                    .add(playPauseButton))
+                    .add(playPauseButton)
+                    .add(addShadowButton)
+                    .add(removeShadowButton))
                 .addContainerGap(0, Short.MAX_VALUE))
         );
 
@@ -154,6 +176,14 @@ public class Main extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_playPauseButtonActionPerformed
 
+    private void addShadowButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addShadowButtonActionPerformed
+        ((SplinesJPanel)this.splineJPanel).addShadow();
+    }//GEN-LAST:event_addShadowButtonActionPerformed
+
+    private void removeShadowButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeShadowButtonActionPerformed
+        ((SplinesJPanel)this.splineJPanel).removeShadow();
+    }//GEN-LAST:event_removeShadowButtonActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -167,11 +197,13 @@ public class Main extends javax.swing.JFrame {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addPointButton;
+    private javax.swing.JButton addShadowButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JButton playPauseButton;
     private javax.swing.JTextField pointQuantityField;
     private javax.swing.JButton removePointButton;
+    private javax.swing.JButton removeShadowButton;
     private javax.swing.JPanel splineJPanel;
     // End of variables declaration//GEN-END:variables
 }

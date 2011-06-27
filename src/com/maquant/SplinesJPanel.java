@@ -124,22 +124,10 @@ public class SplinesJPanel extends javax.swing.JPanel {
         
         //Catmull-Rom
         Stroke stroke = new BasicStroke(5, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
-        g2.setColor(Color.BLUE);
         g2.setStroke(stroke);
         g2.setPaint(new java.awt.GradientPaint(0, 0, Color.blue, 140, 100, Color.green, true));
         drawCatmullRom(g2);
         for (int i = 1; i <= shadows ; i++) {
-            /*switch (i) {
-                case 1:
-                    g2.setColor(new Color(146,39,143));
-                    break;
-                case 2:
-                    g2.setColor(new Color(102,45,145));
-                    break;
-                default:
-                    g2.setColor(Color.BLUE);
-                    break;
-            }*/
             drawCatmullShadow(g2, i*SHADOW);
             drawCatmullShadow(g2, -i*SHADOW);
         }

@@ -46,7 +46,11 @@
                   <Component id="addPointButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="removePointButton" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="404" max="32767" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Component id="addShadowButton" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="removeShadowButton" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace pref="113" max="32767" attributes="0"/>
                   <Component id="playPauseButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
@@ -64,6 +68,8 @@
                       <Component id="pointQuantityField" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="playPauseButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="addShadowButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="removeShadowButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace pref="0" max="32767" attributes="0"/>
               </Group>
@@ -108,6 +114,22 @@
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="playPauseButtonActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="addShadowButton">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="A&#xf1;adir Sombra"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="addShadowButtonActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="removeShadowButton">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Remover Sombra"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="removeShadowButtonActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>
