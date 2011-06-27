@@ -119,12 +119,13 @@ public class Main extends javax.swing.JFrame {
                 .add(addSplineButton)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                 .add(removeSplineButton)
-                .add(62, 62, 62)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 80, Short.MAX_VALUE)
                 .add(jLabel2)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(splineControlSpinner, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .add(1, 1, 1)
-                .add(playPauseButton))
+                .add(playPauseButton)
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -151,11 +152,11 @@ public class Main extends javax.swing.JFrame {
         splineJPanel.setLayout(splineJPanelLayout);
         splineJPanelLayout.setHorizontalGroup(
             splineJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 1120, Short.MAX_VALUE)
+            .add(0, 1155, Short.MAX_VALUE)
         );
         splineJPanelLayout.setVerticalGroup(
             splineJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 599, Short.MAX_VALUE)
+            .add(0, 596, Short.MAX_VALUE)
         );
 
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
@@ -178,10 +179,14 @@ public class Main extends javax.swing.JFrame {
 
     private void addPointButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addPointButtonActionPerformed
         ((SplinesJPanel)this.splineJPanel).addPoint(Integer.parseInt(splineControlSpinner.getValue().toString()));
+        if (((SplinesJPanel)this.splineJPanel).isPaused())
+            ((SplinesJPanel)this.splineJPanel).repaint();
     }//GEN-LAST:event_addPointButtonActionPerformed
 
     private void removePointButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removePointButtonActionPerformed
         ((SplinesJPanel)this.splineJPanel).removePoint(Integer.parseInt(splineControlSpinner.getValue().toString()));
+        if (((SplinesJPanel)this.splineJPanel).isPaused())
+            ((SplinesJPanel)this.splineJPanel).repaint();
     }//GEN-LAST:event_removePointButtonActionPerformed
 
     private void playPauseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_playPauseButtonActionPerformed
@@ -199,10 +204,14 @@ public class Main extends javax.swing.JFrame {
 
     private void addShadowButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addShadowButtonActionPerformed
         ((SplinesJPanel)this.splineJPanel).addShadow();
+        if (((SplinesJPanel)this.splineJPanel).isPaused())
+            ((SplinesJPanel)this.splineJPanel).repaint();
     }//GEN-LAST:event_addShadowButtonActionPerformed
 
     private void removeShadowButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeShadowButtonActionPerformed
         ((SplinesJPanel)this.splineJPanel).removeShadow();
+        if (((SplinesJPanel)this.splineJPanel).isPaused())
+            ((SplinesJPanel)this.splineJPanel).repaint();
     }//GEN-LAST:event_removeShadowButtonActionPerformed
 
     private void addSplineButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addSplineButtonActionPerformed
@@ -210,6 +219,8 @@ public class Main extends javax.swing.JFrame {
         splines++;
         ((SpinnerNumberModel)splineControlSpinner.getModel()).setMaximum(splines-1);
         ((SpinnerNumberModel)splineControlSpinner.getModel()).setValue(((SpinnerNumberModel)splineControlSpinner.getModel()).getNextValue());
+        if (((SplinesJPanel)this.splineJPanel).isPaused())
+            ((SplinesJPanel)this.splineJPanel).repaint();
     }//GEN-LAST:event_addSplineButtonActionPerformed
 
     private void removeSplineButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeSplineButtonActionPerformed
@@ -217,6 +228,8 @@ public class Main extends javax.swing.JFrame {
         splines--;
         ((SpinnerNumberModel)splineControlSpinner.getModel()).setMaximum(splines-1);
         ((SpinnerNumberModel)splineControlSpinner.getModel()).setValue(((SpinnerNumberModel)splineControlSpinner.getModel()).getMaximum());
+        if (((SplinesJPanel)this.splineJPanel).isPaused())
+            ((SplinesJPanel)this.splineJPanel).repaint();
     }//GEN-LAST:event_removeSplineButtonActionPerformed
 
     /**

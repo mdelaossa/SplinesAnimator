@@ -32,9 +32,11 @@ public class SplinesJPanel extends javax.swing.JPanel {
     private ArrayList<ArrayList<VelocityPoint>> splines = new ArrayList();
     private final static int BUFFER = 10; //Used to leave a margin on the panel
     private final static int STEPS = 100;
-    private final static int MAXSPEED = 50;
+    private final static int MAXSPEED = 30;
     private final static int SHADOW = 5;
     private final static int INITIALPOINTS = 5;
+    private final static int MAXX = 350;
+    private final static int MAXY = 300;
     private int shadows = 0;
     private boolean paused = false;
     
@@ -50,8 +52,8 @@ public class SplinesJPanel extends javax.swing.JPanel {
         ArrayList<VelocityPoint> points = new ArrayList<VelocityPoint>();
         
         for (int i = 0 ; i < INITIALPOINTS ; i++) {
-            int x = rand.nextInt(100);
-            int y = rand.nextInt(100);
+            int x = rand.nextInt(MAXX);
+            int y = rand.nextInt(MAXY);
             int vx = rand.nextInt(MAXSPEED);
             int vy = rand.nextInt(MAXSPEED);
             VelocityPoint newPoint = new VelocityPoint(x,y,vx,vy);
@@ -61,6 +63,10 @@ public class SplinesJPanel extends javax.swing.JPanel {
         splines.add(points);
         
         timer.schedule(new animator(), 50, 50);
+    }
+    
+    public boolean isPaused() {
+        return paused;
     }
 
     public ArrayList<VelocityPoint> getPoints(int spline) {
@@ -90,8 +96,8 @@ public class SplinesJPanel extends javax.swing.JPanel {
     
     public void addPoint(int spline, int qty) {
         for (int i = 0 ; i < qty ; i++) {
-            int x = rand.nextInt(100);
-            int y = rand.nextInt(100);
+            int x = rand.nextInt(MAXX);
+            int y = rand.nextInt(MAXY);
             int vx = rand.nextInt(MAXSPEED);
             int vy = rand.nextInt(MAXSPEED);
             VelocityPoint newPoint = new VelocityPoint(x,y,vx,vy);
@@ -108,6 +114,7 @@ public class SplinesJPanel extends javax.swing.JPanel {
     }
     
     public void removePoint(int spline, int qty) {
+        if (splines.get(spline).size()-qty > 3)
         for (int i = 0 ; i < qty ; i++) {
             splines.get(spline).remove(splines.get(spline).size()-1);
         }
@@ -117,8 +124,8 @@ public class SplinesJPanel extends javax.swing.JPanel {
         ArrayList<VelocityPoint> points = new ArrayList<VelocityPoint>();
         
         for (int i = 0 ; i < INITIALPOINTS ; i++) {
-            int x = rand.nextInt(100);
-            int y = rand.nextInt(100);
+            int x = rand.nextInt(MAXX);
+            int y = rand.nextInt(MAXY);
             int vx = rand.nextInt(MAXSPEED);
             int vy = rand.nextInt(MAXSPEED);
             VelocityPoint newPoint = new VelocityPoint(x,y,vx,vy);
