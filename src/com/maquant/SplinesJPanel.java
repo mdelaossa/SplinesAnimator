@@ -10,12 +10,16 @@
  */
 package com.maquant;
 
+import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.RenderingHints;
+import java.awt.Shape;
+import java.awt.Stroke;
 import java.util.ArrayList;
 import java.util.Iterator;
 import javax.swing.SwingWorker;
@@ -28,20 +32,18 @@ public class SplinesJPanel extends javax.swing.JPanel {
 
     private ArrayList<VelocityPoint> points = new ArrayList<VelocityPoint>();
     private final static int BUFFER = 10; //Used to leave a margin on the panel
-    private final static int STEPS = 80;
+    private final static int STEPS = 500;
+    private boolean paused = false;
     
-    java.util.Random rand = new java.util.Random();
+    private java.util.Timer timer = new java.util.Timer();
+    
+    private java.util.Random rand = new java.util.Random();
     
 
     /** Creates new form SplinesJPanel */
     public SplinesJPanel() {
         initComponents();
         
-        //TODO: Remove test code
-        //points.add(new VelocityPoint(2,3,2,3));
-        //points.add(new VelocityPoint(20,30,20,30));
-        //points.add(new VelocityPoint(40,60,40,60));
-        //points.add(new VelocityPoint(60,90,60,90));
         for (int i = 0 ; i < 10 ; i++) {
             int x = rand.nextInt(100);
             int y = rand.nextInt(100);
@@ -50,13 +52,20 @@ public class SplinesJPanel extends javax.swing.JPanel {
             VelocityPoint newPoint = new VelocityPoint(x,y,vx,vy);
             points.add(newPoint);
         }
-        //END TEST CODE---------
-        java.util.Timer timer = new java.util.Timer();
+        
         timer.schedule(new animator(), 50, 50);
     }
 
     public ArrayList<VelocityPoint> getPoints() {
         return points;
+    }
+    
+    public void pause() {
+        paused = true;
+    }
+    
+    public void play() {
+        paused = false;
     }
 
     public void setPoints(ArrayList<VelocityPoint> points) {
@@ -102,8 +111,25 @@ public class SplinesJPanel extends javax.swing.JPanel {
         super.paint(grphcs);
         Graphics2D g2 = (Graphics2D) grphcs;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2.setFont(new Font("Times New Roman", Font.BOLD, 30));
         
+        //Catmull-Rom
+        Stroke stroke = new BasicStroke(8, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+        g2.setColor(Color.blue);
+        g2.setStroke(stroke);
+        
+        drawCatmullRom(g2);
+        //-------
+        
+        //Control points
+        g2.setFont(new Font("Times New Roman", Font.BOLD, 30));
+        g2.setColor(Color.white);
+        
+        drawControlPoints(g2);
+        //-------
+        
+    }
+    
+    public void drawControlPoints(Graphics2D g2) {
         Iterator pointIterator = points.iterator();
         while(pointIterator.hasNext()) {
             VelocityPoint currentPoint = (VelocityPoint) pointIterator.next();
@@ -113,7 +139,9 @@ public class SplinesJPanel extends javax.swing.JPanel {
             y = (currentPoint.y < BUFFER)?currentPoint.y+BUFFER:currentPoint.y;
             g2.drawString(".", x, y);
         }
-        
+    }
+    
+    public void drawCatmullRom(Graphics2D g2) {
         Polygon pol = new Polygon ();
         Point q = catmullPoint(2,0);
         pol.addPoint(q.x,q.y);
@@ -172,10 +200,11 @@ public class SplinesJPanel extends javax.swing.JPanel {
     }
     
     private class animator extends java.util.TimerTask {
-
+        
         @Override
         public void run() {
-            animatePoints();
+            if (!paused)
+                animatePoints();
         }
         
     }

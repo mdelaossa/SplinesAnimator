@@ -46,7 +46,9 @@
                   <Component id="addPointButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="removePointButton" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="502" max="32767" attributes="0"/>
+                  <EmptySpace pref="404" max="32767" attributes="0"/>
+                  <Component id="playPauseButton" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="pointQuantityField" min="-2" max="-2" attributes="0"/>
@@ -61,6 +63,7 @@
                       <Component id="removePointButton" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="pointQuantityField" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="playPauseButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace pref="0" max="32767" attributes="0"/>
               </Group>
@@ -99,11 +102,22 @@
             <Property name="text" type="java.lang.String" value="# Puntos:"/>
           </Properties>
         </Component>
+        <Component class="javax.swing.JButton" name="playPauseButton">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Pausa"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="playPauseButtonActionPerformed"/>
+          </Events>
+        </Component>
       </SubComponents>
     </Container>
     <Container class="javax.swing.JPanel" name="splineJPanel">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="0" green="0" red="0" type="rgb"/>
+        </Property>
+        <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="ff" green="ff" red="ff" type="rgb"/>
         </Property>
       </Properties>

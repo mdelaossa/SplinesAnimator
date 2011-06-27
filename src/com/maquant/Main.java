@@ -17,6 +17,7 @@ package com.maquant;
 public class Main extends javax.swing.JFrame {
     
     private int pointQuantity = 10;
+    private boolean paused = false;
 
     /** Creates new form Main */
     public Main() {
@@ -38,6 +39,7 @@ public class Main extends javax.swing.JFrame {
         removePointButton = new javax.swing.JButton();
         pointQuantityField = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
+        playPauseButton = new javax.swing.JButton();
         splineJPanel = new SplinesJPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -61,6 +63,13 @@ public class Main extends javax.swing.JFrame {
 
         jLabel1.setText("# Puntos:");
 
+        playPauseButton.setText("Pausa");
+        playPauseButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                playPauseButtonActionPerformed(evt);
+            }
+        });
+
         org.jdesktop.layout.GroupLayout jPanel1Layout = new org.jdesktop.layout.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -69,7 +78,9 @@ public class Main extends javax.swing.JFrame {
                 .add(addPointButton)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                 .add(removePointButton)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 502, Short.MAX_VALUE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 404, Short.MAX_VALUE)
+                .add(playPauseButton)
+                .add(18, 18, 18)
                 .add(jLabel1)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(pointQuantityField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
@@ -81,11 +92,13 @@ public class Main extends javax.swing.JFrame {
                     .add(addPointButton)
                     .add(removePointButton)
                     .add(pointQuantityField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(jLabel1))
+                    .add(jLabel1)
+                    .add(playPauseButton))
                 .addContainerGap(0, Short.MAX_VALUE))
         );
 
-        splineJPanel.setBackground(new java.awt.Color(255, 255, 255));
+        splineJPanel.setBackground(new java.awt.Color(0, 0, 0));
+        splineJPanel.setForeground(new java.awt.Color(255, 255, 255));
 
         org.jdesktop.layout.GroupLayout splineJPanelLayout = new org.jdesktop.layout.GroupLayout(splineJPanel);
         splineJPanel.setLayout(splineJPanelLayout);
@@ -128,6 +141,19 @@ public class Main extends javax.swing.JFrame {
         pointQuantityField.setText(String.valueOf(pointQuantity));
     }//GEN-LAST:event_removePointButtonActionPerformed
 
+    private void playPauseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_playPauseButtonActionPerformed
+        if (!paused) {
+            ((SplinesJPanel)this.splineJPanel).pause();
+            paused = true;
+            playPauseButton.setText("Continuar");
+        }
+        else {
+            ((SplinesJPanel)this.splineJPanel).play();
+            paused = false;
+            playPauseButton.setText("Pausa");
+        }
+    }//GEN-LAST:event_playPauseButtonActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -143,6 +169,7 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JButton addPointButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JButton playPauseButton;
     private javax.swing.JTextField pointQuantityField;
     private javax.swing.JButton removePointButton;
     private javax.swing.JPanel splineJPanel;
