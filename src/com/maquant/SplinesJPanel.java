@@ -13,6 +13,8 @@ package com.maquant;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Polygon;
 import java.awt.RenderingHints;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -26,6 +28,9 @@ public class SplinesJPanel extends javax.swing.JPanel {
 
     private ArrayList<VelocityPoint> points = new ArrayList<VelocityPoint>();
     private final static int BUFFER = 10; //Used to leave a margin on the panel
+    private final static int STEPS = 20;
+    
+    java.util.Random rand = new java.util.Random();
     
 
     /** Creates new form SplinesJPanel */
@@ -37,8 +42,7 @@ public class SplinesJPanel extends javax.swing.JPanel {
         //points.add(new VelocityPoint(20,30,20,30));
         //points.add(new VelocityPoint(40,60,40,60));
         //points.add(new VelocityPoint(60,90,60,90));
-        java.util.Random rand = new java.util.Random();
-        for (int i = 0 ; i < 5000 ; i++) {
+        for (int i = 0 ; i < 10 ; i++) {
             int x = rand.nextInt(100);
             int y = rand.nextInt(100);
             int vx = rand.nextInt(50);
@@ -63,6 +67,21 @@ public class SplinesJPanel extends javax.swing.JPanel {
         this.points.add(point);
     }
     
+    public void addPoint() {
+        addPoint(1);
+    }
+    
+    public void addPoint(int qty) {
+        for (int i = 0 ; i < qty ; i++) {
+            int x = rand.nextInt(100);
+            int y = rand.nextInt(100);
+            int vx = rand.nextInt(50);
+            int vy = rand.nextInt(50);
+            VelocityPoint newPoint = new VelocityPoint(x,y,vx,vy);
+            points.add(newPoint);
+        }
+    }
+    
     public void removePoint(VelocityPoint point) {
         this.points.remove(point);
     }
@@ -84,6 +103,17 @@ public class SplinesJPanel extends javax.swing.JPanel {
             y = (currentPoint.y < BUFFER)?currentPoint.y+BUFFER:currentPoint.y;
             g2.drawString(".", x, y);
         }
+        
+        Polygon pol = new Polygon ();
+        Point q = catmullPoint(2,0);
+        pol.addPoint(q.x,q.y);
+        for (int i = 2; i < points.size()-1; i++) {
+          for (int j = 1; j <= STEPS; j++) {
+            q = catmullPoint(i,j/(float)STEPS);
+            pol.addPoint(q.x,q.y);
+          }
+        }
+        g2.drawPolyline(pol.xpoints, pol.ypoints, pol.npoints);
 
     }
     
@@ -123,6 +153,30 @@ public class SplinesJPanel extends javax.swing.JPanel {
         }
         
     }
+    
+    float bMatrix(int i, float t) { //Matriz catmull-rom
+        switch (i) {
+            case -2:
+              return ((-t+2)*t-1)*t/2;
+            case -1:
+              return (((3*t-5)*t)*t+2)/2;
+            case 0:
+              return ((-3*t+4)*t+1)*t/2;
+            case 1:
+              return ((t-1)*t*t)/2;
+        }
+        return 0;
+    }
+    
+    Point catmullPoint(int i, float t) {
+        float px=0;
+        float py=0;
+        for (int j = -2; j<=1; j++){
+          px += bMatrix(j,t)*points.get(i+j).x;
+          py += bMatrix(j,t)*points.get(i+j).y;
+        }
+    return new Point((int)Math.round(px),(int)Math.round(py));
+  }
 
     /** This method is called from within the constructor to
      * initialize the form.
