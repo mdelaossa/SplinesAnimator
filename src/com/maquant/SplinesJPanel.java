@@ -28,7 +28,7 @@ public class SplinesJPanel extends javax.swing.JPanel {
 
     private ArrayList<VelocityPoint> points = new ArrayList<VelocityPoint>();
     private final static int BUFFER = 10; //Used to leave a margin on the panel
-    private final static int STEPS = 20;
+    private final static int STEPS = 80;
     
     java.util.Random rand = new java.util.Random();
     
@@ -86,6 +86,16 @@ public class SplinesJPanel extends javax.swing.JPanel {
         this.points.remove(point);
     }
     
+    public void removePoint() {
+        removePoint(1);
+    }
+    
+    public void removePoint(int qty) {
+        for (int i = 0 ; i < qty ; i++) {
+            points.remove(points.size()-1);
+        }
+    }
+    
     
     @Override
     public void paint(Graphics grphcs) {
@@ -113,8 +123,24 @@ public class SplinesJPanel extends javax.swing.JPanel {
             pol.addPoint(q.x,q.y);
           }
         }
-        g2.drawPolyline(pol.xpoints, pol.ypoints, pol.npoints);
+        //This area turns the spline into a closed spline
+        for (int j = 1; j <= STEPS; j++) { 
+            q = catmullClosingPoint(points.size()-1,j/(float)STEPS);
+            pol.addPoint(q.x,q.y);
+        }
 
+        for (int j = 1; j <= STEPS; j++) { 
+            q = catmullClosingPoint2(points.size(),j/(float)STEPS);
+            pol.addPoint(q.x,q.y);
+        }
+        
+        for (int j = 1; j <= STEPS; j++) { 
+            q = catmullClosingPoint3(points.size()+1,j/(float)STEPS);
+            pol.addPoint(q.x,q.y);
+        }
+        
+        g2.drawPolyline(pol.xpoints, pol.ypoints, pol.npoints);
+        //--------------------
     }
     
     
@@ -175,8 +201,53 @@ public class SplinesJPanel extends javax.swing.JPanel {
           px += bMatrix(j,t)*points.get(i+j).x;
           py += bMatrix(j,t)*points.get(i+j).y;
         }
-    return new Point((int)Math.round(px),(int)Math.round(py));
-  }
+        return new Point((int)Math.round(px),(int)Math.round(py));
+      }
+    
+    Point catmullClosingPoint(int i, float t) {
+        float px=0;
+        float py=0;
+        for (int j = -2; j<=1; j++){
+            if (i+j < points.size()) {
+                px += bMatrix(j,t)*points.get(i+j).x;
+                py += bMatrix(j,t)*points.get(i+j).y;
+            } else {
+                px += bMatrix(j,t)*points.get(0).x;
+                py += bMatrix(j,t)*points.get(0).y;
+            }
+        }
+        return new Point((int)Math.round(px),(int)Math.round(py));
+    }
+    
+    Point catmullClosingPoint2(int i, float t) {
+        float px=0;
+        float py=0;
+        for (int j = -2; j<=1; j++){
+            if (i+j < points.size()) {
+                px += bMatrix(j,t)*points.get(i+j).x;
+                py += bMatrix(j,t)*points.get(i+j).y;
+            } else {
+                px += bMatrix(j,t)*points.get(j).x;
+                py += bMatrix(j,t)*points.get(j).y;
+            }
+        }
+        return new Point((int)Math.round(px),(int)Math.round(py));
+    }
+    
+    Point catmullClosingPoint3(int i, float t) {
+        float px=0;
+        float py=0;
+        for (int j = -2; j<=1; j++){
+            if (i+j < points.size()) {
+                px += bMatrix(j,t)*points.get(i+j).x;
+                py += bMatrix(j,t)*points.get(i+j).y;
+            } else {
+                px += bMatrix(j,t)*points.get(j+1).x;
+                py += bMatrix(j,t)*points.get(j+1).y;
+            }
+        }
+        return new Point((int)Math.round(px),(int)Math.round(py));
+    }
 
     /** This method is called from within the constructor to
      * initialize the form.

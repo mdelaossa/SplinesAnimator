@@ -15,10 +15,13 @@ package com.maquant;
  * @author mario
  */
 public class Main extends javax.swing.JFrame {
+    
+    private int pointQuantity = 10;
 
     /** Creates new form Main */
     public Main() {
         initComponents();
+        pointQuantityField.setText(String.valueOf(pointQuantity));
     }
 
     /** This method is called from within the constructor to
@@ -32,6 +35,9 @@ public class Main extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         addPointButton = new javax.swing.JButton();
+        removePointButton = new javax.swing.JButton();
+        pointQuantityField = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
         splineJPanel = new SplinesJPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -43,18 +49,39 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
+        removePointButton.setText("Remover Punto");
+        removePointButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removePointButtonActionPerformed(evt);
+            }
+        });
+
+        pointQuantityField.setMinimumSize(new java.awt.Dimension(54, 28));
+        pointQuantityField.setPreferredSize(new java.awt.Dimension(54, 28));
+
+        jLabel1.setText("# Puntos:");
+
         org.jdesktop.layout.GroupLayout jPanel1Layout = new org.jdesktop.layout.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(jPanel1Layout.createSequentialGroup()
                 .add(addPointButton)
-                .addContainerGap(763, Short.MAX_VALUE))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                .add(removePointButton)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 502, Short.MAX_VALUE)
+                .add(jLabel1)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(pointQuantityField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(jPanel1Layout.createSequentialGroup()
-                .add(addPointButton)
+                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(addPointButton)
+                    .add(removePointButton)
+                    .add(pointQuantityField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(jLabel1))
                 .addContainerGap(0, Short.MAX_VALUE))
         );
 
@@ -68,7 +95,7 @@ public class Main extends javax.swing.JFrame {
         );
         splineJPanelLayout.setVerticalGroup(
             splineJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 585, Short.MAX_VALUE)
+            .add(0, 584, Short.MAX_VALUE)
         );
 
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
@@ -91,7 +118,15 @@ public class Main extends javax.swing.JFrame {
 
     private void addPointButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addPointButtonActionPerformed
         ((SplinesJPanel)this.splineJPanel).addPoint();
+        pointQuantity+= 1;
+        pointQuantityField.setText(String.valueOf(pointQuantity));
     }//GEN-LAST:event_addPointButtonActionPerformed
+
+    private void removePointButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removePointButtonActionPerformed
+        ((SplinesJPanel)this.splineJPanel).removePoint();
+        pointQuantity-= 1;
+        pointQuantityField.setText(String.valueOf(pointQuantity));
+    }//GEN-LAST:event_removePointButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -106,7 +141,10 @@ public class Main extends javax.swing.JFrame {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addPointButton;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JTextField pointQuantityField;
+    private javax.swing.JButton removePointButton;
     private javax.swing.JPanel splineJPanel;
     // End of variables declaration//GEN-END:variables
 }
