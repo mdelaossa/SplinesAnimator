@@ -29,11 +29,12 @@ import javax.swing.SwingWorker;
  */
 public class SplinesJPanel extends javax.swing.JPanel {
 
-    private ArrayList<VelocityPoint> points = new ArrayList<VelocityPoint>();
+    private ArrayList<ArrayList<VelocityPoint>> splines = new ArrayList();
     private final static int BUFFER = 10; //Used to leave a margin on the panel
     private final static int STEPS = 100;
     private final static int MAXSPEED = 50;
     private final static int SHADOW = 5;
+    private final static int INITIALPOINTS = 5;
     private int shadows = 0;
     private boolean paused = false;
     
@@ -46,7 +47,9 @@ public class SplinesJPanel extends javax.swing.JPanel {
     public SplinesJPanel() {
         initComponents();
         
-        for (int i = 0 ; i < 10 ; i++) {
+        ArrayList<VelocityPoint> points = new ArrayList<VelocityPoint>();
+        
+        for (int i = 0 ; i < INITIALPOINTS ; i++) {
             int x = rand.nextInt(100);
             int y = rand.nextInt(100);
             int vx = rand.nextInt(MAXSPEED);
@@ -55,11 +58,13 @@ public class SplinesJPanel extends javax.swing.JPanel {
             points.add(newPoint);
         }
         
+        splines.add(points);
+        
         timer.schedule(new animator(), 50, 50);
     }
 
-    public ArrayList<VelocityPoint> getPoints() {
-        return points;
+    public ArrayList<VelocityPoint> getPoints(int spline) {
+        return splines.get(spline);
     }
     
     public void pause() {
@@ -70,20 +75,48 @@ public class SplinesJPanel extends javax.swing.JPanel {
         paused = false;
     }
 
-    public void setPoints(ArrayList<VelocityPoint> points) {
-        this.points = points;
+    public void setPoints(int spline, ArrayList<VelocityPoint> points) {
+        ArrayList temp = this.splines.get(spline);
+        temp = points;
     }
     
-    public void addPoint(VelocityPoint point) {
-        this.points.add(point);
+    public void addPoint(int spline, VelocityPoint point) {
+        this.splines.get(spline).add(point);
     }
     
-    public void addPoint() {
-        addPoint(1);
+    public void addPoint(int spline) {
+        addPoint(spline, 1);
     }
     
-    public void addPoint(int qty) {
+    public void addPoint(int spline, int qty) {
         for (int i = 0 ; i < qty ; i++) {
+            int x = rand.nextInt(100);
+            int y = rand.nextInt(100);
+            int vx = rand.nextInt(MAXSPEED);
+            int vy = rand.nextInt(MAXSPEED);
+            VelocityPoint newPoint = new VelocityPoint(x,y,vx,vy);
+            this.splines.get(spline).add(newPoint);
+        }
+    }
+    
+    public void removePoint(int spline, VelocityPoint point) {
+        this.splines.get(spline).remove(point);
+    }
+    
+    public void removePoint(int spline) {
+        removePoint(spline, 1);
+    }
+    
+    public void removePoint(int spline, int qty) {
+        for (int i = 0 ; i < qty ; i++) {
+            splines.get(spline).remove(splines.get(spline).size()-1);
+        }
+    }
+    
+    public void addSpline() {
+        ArrayList<VelocityPoint> points = new ArrayList<VelocityPoint>();
+        
+        for (int i = 0 ; i < INITIALPOINTS ; i++) {
             int x = rand.nextInt(100);
             int y = rand.nextInt(100);
             int vx = rand.nextInt(MAXSPEED);
@@ -91,20 +124,17 @@ public class SplinesJPanel extends javax.swing.JPanel {
             VelocityPoint newPoint = new VelocityPoint(x,y,vx,vy);
             points.add(newPoint);
         }
+        
+        splines.add(points);
     }
     
-    public void removePoint(VelocityPoint point) {
-        this.points.remove(point);
+    public void removeSpline() {
+        if (splines.size() > 1)
+            splines.remove(splines.size()-1);
     }
     
-    public void removePoint() {
-        removePoint(1);
-    }
-    
-    public void removePoint(int qty) {
-        for (int i = 0 ; i < qty ; i++) {
-            points.remove(points.size()-1);
-        }
+    public int splineCount() {
+        return splines.size();
     }
     
     public void addShadow() {
@@ -122,28 +152,57 @@ public class SplinesJPanel extends javax.swing.JPanel {
         Graphics2D g2 = (Graphics2D) grphcs;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         
+        for (int i = 0 ; i < splines.size() ; i++) {
+            switch (i) {
+                case 0:
+                    g2.setPaint(new java.awt.GradientPaint(0, 0, Color.blue, 140, 100, Color.green, true));
+                    break;
+                case 1:
+                    g2.setPaint(new java.awt.GradientPaint(0, 0, Color.MAGENTA, 140, 100, Color.PINK, true));
+                    break;
+                case 2:
+                    g2.setPaint(new java.awt.GradientPaint(0, 0, Color.ORANGE, 140, 100, Color.RED, true));
+                    break;
+                case 3:
+                    g2.setPaint(new java.awt.GradientPaint(0, 0, Color.cyan, 140, 100, Color.yellow, true));
+                    break;
+                case 4:
+                    g2.setPaint(new java.awt.GradientPaint(0, 0, Color.DARK_GRAY, 140, 100, Color.green, true));
+                    break;
+                case 5:
+                    g2.setPaint(new java.awt.GradientPaint(0, 0, Color.blue, 140, 100, Color.yellow, true));
+                    break;
+                default:
+                    g2.setPaint(new java.awt.GradientPaint(0, 0, Color.white, 140, 100, Color.white, true));
+                    break;
+            }
+            drawSpline(i,g2);
+        }
+        
+    }
+    
+    public void drawSpline(int spline, Graphics2D g2) {
         //Catmull-Rom
         Stroke stroke = new BasicStroke(5, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
         g2.setStroke(stroke);
-        g2.setPaint(new java.awt.GradientPaint(0, 0, Color.blue, 140, 100, Color.green, true));
-        drawCatmullRom(g2);
+        
+        drawCatmullRom(spline, g2);
         for (int i = 1; i <= shadows ; i++) {
-            drawCatmullShadow(g2, i*SHADOW);
-            drawCatmullShadow(g2, -i*SHADOW);
+            drawCatmullShadow(spline, g2, i*SHADOW);
+            drawCatmullShadow(spline, g2, -i*SHADOW);
         }
         //-------
         
         //Control points
-        g2.setFont(new Font("Times New Roman", Font.BOLD, 30));
+        g2.setFont(new Font("Times New Roman", Font.BOLD, 50));
         g2.setColor(Color.white);
         
-        drawControlPoints(g2);
+        drawControlPoints(spline, g2);
         //-------
-        
     }
     
-    public void drawControlPoints(Graphics2D g2) {
-        Iterator pointIterator = points.iterator();
+    public void drawControlPoints(int spline, Graphics2D g2) {
+        Iterator pointIterator = this.splines.get(spline).iterator();
         while(pointIterator.hasNext()) {
             VelocityPoint currentPoint = (VelocityPoint) pointIterator.next();
             int x = (currentPoint.x > this.getWidth()-BUFFER)?currentPoint.x-BUFFER:currentPoint.x;
@@ -154,29 +213,29 @@ public class SplinesJPanel extends javax.swing.JPanel {
         }
     }
     
-    public void drawCatmullRom(Graphics2D g2) {
+    public void drawCatmullRom(int spline, Graphics2D g2) {
         Polygon pol = new Polygon ();
-        Point q = catmullPoint(2,0);
+        Point q = catmullPoint(spline, 2,0);
         pol.addPoint(q.x,q.y);
-        for (int i = 2; i < points.size()-1; i++) {
+        for (int i = 2; i < this.splines.get(spline).size()-1; i++) {
           for (int j = 1; j <= STEPS; j++) {
-            q = catmullPoint(i,j/(float)STEPS);
+            q = catmullPoint(spline, i,j/(float)STEPS);
             pol.addPoint(q.x,q.y);
           }
         }
         //This area turns the spline into a closed spline
         for (int j = 1; j <= STEPS; j++) { 
-            q = catmullClosingPoint(points.size()-1,j/(float)STEPS);
+            q = catmullClosingPoint(spline, this.splines.get(spline).size()-1,j/(float)STEPS);
             pol.addPoint(q.x,q.y);
         }
 
         for (int j = 1; j <= STEPS; j++) { 
-            q = catmullClosingPoint2(points.size(),j/(float)STEPS);
+            q = catmullClosingPoint2(spline, this.splines.get(spline).size(),j/(float)STEPS);
             pol.addPoint(q.x,q.y);
         }
         
         for (int j = 1; j <= STEPS; j++) { 
-            q = catmullClosingPoint3(points.size()+1,j/(float)STEPS);
+            q = catmullClosingPoint3(spline, this.splines.get(spline).size()+1,j/(float)STEPS);
             pol.addPoint(q.x,q.y);
         }
         
@@ -184,29 +243,29 @@ public class SplinesJPanel extends javax.swing.JPanel {
         //--------------------
     }
     
-    public void drawCatmullShadow(Graphics2D g2, int shadow) {
+    public void drawCatmullShadow(int spline, Graphics2D g2, int shadow) {
         Polygon pol = new Polygon ();
-        Point q = catmullPoint(2,0);
+        Point q = catmullPoint(spline, 2,0);
         pol.addPoint(q.x+shadow,q.y+shadow);
-        for (int i = 2; i < points.size()-1; i++) {
+        for (int i = 2; i < this.splines.get(spline).size()-1; i++) {
           for (int j = 1; j <= STEPS; j++) {
-            q = catmullPoint(i,j/(float)STEPS);
+            q = catmullPoint(spline, i,j/(float)STEPS);
             pol.addPoint(q.x+shadow,q.y+shadow);
           }
         }
         //This area turns the spline into a closed spline
         for (int j = 1; j <= STEPS; j++) { 
-            q = catmullClosingPoint(points.size()-1,j/(float)STEPS);
+            q = catmullClosingPoint(spline, this.splines.get(spline).size()-1,j/(float)STEPS);
             pol.addPoint(q.x+shadow,q.y+shadow);
         }
 
         for (int j = 1; j <= STEPS; j++) { 
-            q = catmullClosingPoint2(points.size(),j/(float)STEPS);
+            q = catmullClosingPoint2(spline, this.splines.get(spline).size(),j/(float)STEPS);
             pol.addPoint(q.x+shadow,q.y+shadow);
         }
         
         for (int j = 1; j <= STEPS; j++) { 
-            q = catmullClosingPoint3(points.size()+1,j/(float)STEPS);
+            q = catmullClosingPoint3(spline, this.splines.get(spline).size()+1,j/(float)STEPS);
             pol.addPoint(q.x+shadow,q.y+shadow);
         }
         
@@ -220,18 +279,22 @@ public class SplinesJPanel extends javax.swing.JPanel {
 
             @Override
             protected Void doInBackground() throws Exception {
-                Iterator pointIterator = points.iterator();
-                while(pointIterator.hasNext()) {
-                    VelocityPoint currentPoint = (VelocityPoint) pointIterator.next();
-                    if (currentPoint.x + currentPoint.getVelocityX() + BUFFER < getWidth() && currentPoint.x + currentPoint.getVelocityX() > 0) {
-                        currentPoint.x = currentPoint.x + currentPoint.getVelocityX();
-                    } else {
-                        currentPoint.setVelocityX(-1*currentPoint.getVelocityX());
-                    }
-                    if (currentPoint.y + currentPoint.getVelocityY() + BUFFER < getHeight() && currentPoint.y + currentPoint.getVelocityY() > 0) {
-                        currentPoint.y = currentPoint.y + currentPoint.getVelocityY();
-                    } else {
-                        currentPoint.setVelocityY(-1*currentPoint.getVelocityY());
+                Iterator splineIterator = splines.iterator();
+                while(splineIterator.hasNext()) {
+                    
+                    Iterator pointIterator = ((ArrayList<ArrayList<VelocityPoint>>)splineIterator.next()).iterator();
+                    while(pointIterator.hasNext()) {
+                        VelocityPoint currentPoint = (VelocityPoint) pointIterator.next();
+                        if (currentPoint.x + currentPoint.getVelocityX() + BUFFER < getWidth() && currentPoint.x + currentPoint.getVelocityX() > 0) {
+                            currentPoint.x = currentPoint.x + currentPoint.getVelocityX();
+                        } else {
+                            currentPoint.setVelocityX(-1*currentPoint.getVelocityX());
+                        }
+                        if (currentPoint.y + currentPoint.getVelocityY() + BUFFER < getHeight() && currentPoint.y + currentPoint.getVelocityY() > 0) {
+                            currentPoint.y = currentPoint.y + currentPoint.getVelocityY();
+                        } else {
+                            currentPoint.setVelocityY(-1*currentPoint.getVelocityY());
+                        }
                     }
                 }
                 repaint();
@@ -266,19 +329,20 @@ public class SplinesJPanel extends javax.swing.JPanel {
         return 0;
     }
     
-    Point catmullPoint(int i, float t) {
+    Point catmullPoint(int spline, int i, float t) {
         float px=0;
         float py=0;
         for (int j = -2; j<=1; j++){
-          px += bMatrix(j,t)*points.get(i+j).x;
-          py += bMatrix(j,t)*points.get(i+j).y;
+          px += bMatrix(j,t)*this.splines.get(spline).get(i+j).x;
+          py += bMatrix(j,t)*this.splines.get(spline).get(i+j).y;
         }
         return new Point((int)Math.round(px),(int)Math.round(py));
       }
     
-    Point catmullClosingPoint(int i, float t) {
+    Point catmullClosingPoint(int spline, int i, float t) {
         float px=0;
         float py=0;
+        ArrayList<VelocityPoint> points = this.splines.get(spline);
         for (int j = -2; j<=1; j++){
             if (i+j < points.size()) {
                 px += bMatrix(j,t)*points.get(i+j).x;
@@ -291,9 +355,10 @@ public class SplinesJPanel extends javax.swing.JPanel {
         return new Point((int)Math.round(px),(int)Math.round(py));
     }
     
-    Point catmullClosingPoint2(int i, float t) {
+    Point catmullClosingPoint2(int spline, int i, float t) {
         float px=0;
         float py=0;
+        ArrayList<VelocityPoint> points = this.splines.get(spline);
         for (int j = -2; j<=1; j++){
             if (i+j < points.size()) {
                 px += bMatrix(j,t)*points.get(i+j).x;
@@ -306,9 +371,10 @@ public class SplinesJPanel extends javax.swing.JPanel {
         return new Point((int)Math.round(px),(int)Math.round(py));
     }
     
-    Point catmullClosingPoint3(int i, float t) {
+    Point catmullClosingPoint3(int spline, int i, float t) {
         float px=0;
         float py=0;
+        ArrayList<VelocityPoint> points = this.splines.get(spline);
         for (int j = -2; j<=1; j++){
             if (i+j < points.size()) {
                 px += bMatrix(j,t)*points.get(i+j).x;

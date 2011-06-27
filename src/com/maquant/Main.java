@@ -10,19 +10,21 @@
  */
 package com.maquant;
 
+import javax.swing.SpinnerNumberModel;
+
 /**
  *
  * @author mario
  */
 public class Main extends javax.swing.JFrame {
     
-    private int pointQuantity = 10;
+    private int splines = 1;
     private boolean paused = false;
 
     /** Creates new form Main */
     public Main() {
         initComponents();
-        pointQuantityField.setText(String.valueOf(pointQuantity));
+        ((SpinnerNumberModel)splineControlSpinner.getModel()).setMaximum(0);
     }
 
     /** This method is called from within the constructor to
@@ -37,11 +39,13 @@ public class Main extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         addPointButton = new javax.swing.JButton();
         removePointButton = new javax.swing.JButton();
-        pointQuantityField = new javax.swing.JTextField();
-        jLabel1 = new javax.swing.JLabel();
         playPauseButton = new javax.swing.JButton();
         addShadowButton = new javax.swing.JButton();
         removeShadowButton = new javax.swing.JButton();
+        splineControlSpinner = new javax.swing.JSpinner();
+        jLabel2 = new javax.swing.JLabel();
+        addSplineButton = new javax.swing.JButton();
+        removeSplineButton = new javax.swing.JButton();
         splineJPanel = new SplinesJPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -59,11 +63,6 @@ public class Main extends javax.swing.JFrame {
                 removePointButtonActionPerformed(evt);
             }
         });
-
-        pointQuantityField.setMinimumSize(new java.awt.Dimension(54, 28));
-        pointQuantityField.setPreferredSize(new java.awt.Dimension(54, 28));
-
-        jLabel1.setText("# Puntos:");
 
         playPauseButton.setText("Pausa");
         playPauseButton.addActionListener(new java.awt.event.ActionListener() {
@@ -86,6 +85,24 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
+        splineControlSpinner.setModel(new javax.swing.SpinnerNumberModel(0, 0, 0, 1));
+
+        jLabel2.setText("Controlar Spline:");
+
+        addSplineButton.setText("Añadir Spline");
+        addSplineButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addSplineButtonActionPerformed(evt);
+            }
+        });
+
+        removeSplineButton.setText("Remover Spline");
+        removeSplineButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeSplineButtonActionPerformed(evt);
+            }
+        });
+
         org.jdesktop.layout.GroupLayout jPanel1Layout = new org.jdesktop.layout.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -98,25 +115,33 @@ public class Main extends javax.swing.JFrame {
                 .add(addShadowButton)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(removeShadowButton)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 113, Short.MAX_VALUE)
-                .add(playPauseButton)
-                .add(18, 18, 18)
-                .add(jLabel1)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(pointQuantityField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                .add(addSplineButton)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                .add(removeSplineButton)
+                .add(62, 62, 62)
+                .add(jLabel2)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .add(splineControlSpinner, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(1, 1, 1)
+                .add(playPauseButton))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(jPanel1Layout.createSequentialGroup()
-                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(addPointButton)
-                    .add(removePointButton)
-                    .add(pointQuantityField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(jLabel1)
-                    .add(playPauseButton)
-                    .add(addShadowButton)
-                    .add(removeShadowButton))
-                .addContainerGap(0, Short.MAX_VALUE))
+                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                        .add(addPointButton)
+                        .add(removePointButton)
+                        .add(addShadowButton)
+                        .add(removeShadowButton)
+                        .add(addSplineButton)
+                        .add(removeSplineButton))
+                    .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                        .add(playPauseButton)
+                        .add(jLabel2))
+                    .add(splineControlSpinner, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         splineJPanel.setBackground(new java.awt.Color(0, 0, 0));
@@ -126,11 +151,11 @@ public class Main extends javax.swing.JFrame {
         splineJPanel.setLayout(splineJPanelLayout);
         splineJPanelLayout.setHorizontalGroup(
             splineJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 888, Short.MAX_VALUE)
+            .add(0, 1120, Short.MAX_VALUE)
         );
         splineJPanelLayout.setVerticalGroup(
             splineJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 584, Short.MAX_VALUE)
+            .add(0, 599, Short.MAX_VALUE)
         );
 
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
@@ -152,15 +177,11 @@ public class Main extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void addPointButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addPointButtonActionPerformed
-        ((SplinesJPanel)this.splineJPanel).addPoint();
-        pointQuantity+= 1;
-        pointQuantityField.setText(String.valueOf(pointQuantity));
+        ((SplinesJPanel)this.splineJPanel).addPoint(Integer.parseInt(splineControlSpinner.getValue().toString()));
     }//GEN-LAST:event_addPointButtonActionPerformed
 
     private void removePointButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removePointButtonActionPerformed
-        ((SplinesJPanel)this.splineJPanel).removePoint();
-        pointQuantity-= 1;
-        pointQuantityField.setText(String.valueOf(pointQuantity));
+        ((SplinesJPanel)this.splineJPanel).removePoint(Integer.parseInt(splineControlSpinner.getValue().toString()));
     }//GEN-LAST:event_removePointButtonActionPerformed
 
     private void playPauseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_playPauseButtonActionPerformed
@@ -184,6 +205,20 @@ public class Main extends javax.swing.JFrame {
         ((SplinesJPanel)this.splineJPanel).removeShadow();
     }//GEN-LAST:event_removeShadowButtonActionPerformed
 
+    private void addSplineButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addSplineButtonActionPerformed
+        ((SplinesJPanel)this.splineJPanel).addSpline();
+        splines++;
+        ((SpinnerNumberModel)splineControlSpinner.getModel()).setMaximum(splines-1);
+        ((SpinnerNumberModel)splineControlSpinner.getModel()).setValue(((SpinnerNumberModel)splineControlSpinner.getModel()).getNextValue());
+    }//GEN-LAST:event_addSplineButtonActionPerformed
+
+    private void removeSplineButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeSplineButtonActionPerformed
+        ((SplinesJPanel)this.splineJPanel).removeSpline();
+        splines--;
+        ((SpinnerNumberModel)splineControlSpinner.getModel()).setMaximum(splines-1);
+        ((SpinnerNumberModel)splineControlSpinner.getModel()).setValue(((SpinnerNumberModel)splineControlSpinner.getModel()).getMaximum());
+    }//GEN-LAST:event_removeSplineButtonActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -198,12 +233,14 @@ public class Main extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addPointButton;
     private javax.swing.JButton addShadowButton;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JButton addSplineButton;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JButton playPauseButton;
-    private javax.swing.JTextField pointQuantityField;
     private javax.swing.JButton removePointButton;
     private javax.swing.JButton removeShadowButton;
+    private javax.swing.JButton removeSplineButton;
+    private javax.swing.JSpinner splineControlSpinner;
     private javax.swing.JPanel splineJPanel;
     // End of variables declaration//GEN-END:variables
 }
