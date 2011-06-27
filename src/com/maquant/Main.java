@@ -11,20 +11,26 @@
 package com.maquant;
 
 import javax.swing.SpinnerNumberModel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 /**
  *
  * @author mario
  */
-public class Main extends javax.swing.JFrame {
+public class Main extends javax.swing.JFrame implements ChangeListener {
     
     private int splines = 1;
     private boolean paused = false;
+    
 
     /** Creates new form Main */
     public Main() {
+        
         initComponents();
         ((SpinnerNumberModel)splineControlSpinner.getModel()).setMaximum(0);
+        splineControlSpinner.addChangeListener(this);
+        
     }
 
     /** This method is called from within the constructor to
@@ -86,6 +92,11 @@ public class Main extends javax.swing.JFrame {
         });
 
         splineControlSpinner.setModel(new javax.swing.SpinnerNumberModel(0, 0, 0, 1));
+        splineControlSpinner.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                splineControlSpinnerMouseClicked(evt);
+            }
+        });
 
         jLabel2.setText("Controlar Spline:");
 
@@ -232,6 +243,10 @@ public class Main extends javax.swing.JFrame {
             ((SplinesJPanel)this.splineJPanel).repaint();
     }//GEN-LAST:event_removeSplineButtonActionPerformed
 
+    private void splineControlSpinnerMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_splineControlSpinnerMouseClicked
+        //((SplinesJPanel)this.splineJPanel).setSelectedSpline((Integer)splineControlSpinner.getValue());
+    }//GEN-LAST:event_splineControlSpinnerMouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -256,4 +271,11 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JSpinner splineControlSpinner;
     private javax.swing.JPanel splineJPanel;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void stateChanged(ChangeEvent ce) {
+        ((SplinesJPanel)this.splineJPanel).setSelectedSpline((Integer)splineControlSpinner.getValue());
+        if (((SplinesJPanel)this.splineJPanel).isPaused())
+            ((SplinesJPanel)this.splineJPanel).triggerControlPointInfo();
+    }
 }

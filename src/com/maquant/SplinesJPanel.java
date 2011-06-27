@@ -22,6 +22,7 @@ import java.awt.Stroke;
 import java.util.ArrayList;
 import java.util.Iterator;
 import javax.swing.SwingWorker;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -39,15 +40,23 @@ public class SplinesJPanel extends javax.swing.JPanel {
     private final static int MAXY = 300;
     private int shadows = 0;
     private boolean paused = false;
+    private int selectedSpline = 0;
     
     private java.util.Timer timer = new java.util.Timer();
     
     private java.util.Random rand = new java.util.Random();
     
+    private ControlPointInfo controlPointsInfo = new ControlPointInfo();
+    javax.swing.JTable controlPointsTable = null;
+    
 
     /** Creates new form SplinesJPanel */
     public SplinesJPanel() {
+        controlPointsInfo.setVisible(true);
+        
         initComponents();
+        
+        controlPointsTable = controlPointsInfo.getControlPointsTable();
         
         ArrayList<VelocityPoint> points = new ArrayList<VelocityPoint>();
         
@@ -62,7 +71,7 @@ public class SplinesJPanel extends javax.swing.JPanel {
         
         splines.add(points);
         
-        timer.schedule(new animator(), 50, 50);
+        timer.schedule(new animator(), 0, 40); //24 fps
     }
     
     public boolean isPaused() {
@@ -118,6 +127,10 @@ public class SplinesJPanel extends javax.swing.JPanel {
         for (int i = 0 ; i < qty ; i++) {
             splines.get(spline).remove(splines.get(spline).size()-1);
         }
+    }
+    
+    public void setSelectedSpline(int i) {
+        this.selectedSpline = i;
     }
     
     public void addSpline() {
@@ -312,12 +325,56 @@ public class SplinesJPanel extends javax.swing.JPanel {
         animator.execute();
     }
     
+    private void showControlPointInfo() {
+        SwingWorker<Void,Void> controlPointInfoAgent = new SwingWorker<Void,Void>() {
+
+            @Override
+            protected Void doInBackground() throws Exception {
+                Iterator controlPoints = splines.get(selectedSpline).iterator();
+                if (splines.get(selectedSpline).size() > controlPointsTable.getRowCount()) {
+                    int i = splines.get(selectedSpline).size() - controlPointsTable.getRowCount();
+                    while (i > 0) {
+                        VelocityPoint point = (VelocityPoint) controlPoints.next();
+                        ((DefaultTableModel) controlPointsTable.getModel()).addRow(new Object[]{String.valueOf(i), String.valueOf(point.x), String.valueOf(point.y),
+                                    String.valueOf(point.getVelocityX()), String.valueOf(point.getVelocityY())});
+                        i--;
+                    }
+                } else if (splines.get(selectedSpline).size() < controlPointsTable.getRowCount()) {
+                    int i = controlPointsTable.getRowCount() - splines.get(selectedSpline).size();
+                    for (;i>0;i--) {
+                        ((DefaultTableModel) controlPointsTable.getModel()).removeRow(controlPointsTable.getRowCount()-1);
+                    }
+                }else {
+                    int i = 0;
+                    while (controlPoints.hasNext()) {
+                        VelocityPoint point = (VelocityPoint) controlPoints.next();
+                        controlPointsTable.setValueAt(String.valueOf(i), i, 0);
+                        controlPointsTable.setValueAt(String.valueOf(point.x), i, 1);
+                        controlPointsTable.setValueAt(String.valueOf(point.y), i, 2);
+                        controlPointsTable.setValueAt(String.valueOf(point.getVelocityX()), i, 3);
+                        controlPointsTable.setValueAt(String.valueOf(point.getVelocityY()), i, 4);
+                        i++;
+                    }
+                }
+                return null;
+            }
+        };
+        
+        controlPointInfoAgent.execute();
+    }
+    
+    public void triggerControlPointInfo() {
+        showControlPointInfo();
+    }
+    
     private class animator extends java.util.TimerTask {
         
         @Override
         public void run() {
-            if (!paused)
+            if (!paused) {
                 animatePoints();
+                showControlPointInfo();
+            }
         }
         
     }
